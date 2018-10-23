@@ -1,0 +1,38 @@
+// Add the current_url shortcode
+add_action( 'wpcf7_init', 'wpcf7_add_form_tag_current_url' );
+function wpcf7_add_form_tag_current_url() {
+    // Add shortcode for the form [current_url]
+    wpcf7_add_form_tag( 'current_url',
+        'wpcf7_current_url_form_tag_handler',
+        array(
+            'name-attr' => true
+        )
+    );
+}
+
+// Add the current_property shortcode
+add_action( 'wpcf7_init', 'wpcf7_add_form_tag_current_property' );
+function wpcf7_add_form_tag_current_property() {
+    // Add shortcode for the form [current_property]
+    wpcf7_add_form_tag( 'current_property',
+        'wpcf7_current_property_form_tag_handler',
+        array(
+            'name-attr' => true
+        )
+    );
+}
+
+// Parse the current_url shortcode in the frontend
+function wpcf7_current_url_form_tag_handler( $tag ) {
+    global $wp;
+    $url = home_url( $wp->request );
+    return '<input type="hidden" name="'.$tag['name'].'" value="'.$url.'" />';
+}
+
+// Parse the current_property shortcode in the frontend
+function wpcf7_current_property_form_tag_handler( $tag ) {
+	global $post;
+	$post_id = $post->ID;
+	$property_id = get_post_meta($post_id, IWP_PREFIX.'property_id', true);
+    return '<input type="hidden" name="'.$tag['name'].'" value="'.$property_id.'" />';
+}
